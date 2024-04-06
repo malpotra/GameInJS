@@ -1,11 +1,126 @@
 <html>
     <head>
         <title>My Car Game</title>
-        <script>console.log("Hello");</script>
+        <meta charset="utf-8" />
+        <link href="../assets/">
     </head>
+    <style>
+        html, body {
+            margin:0;
+            padding:0;
+            height:100%;
+            overflow: hidden;
+        }
+        #game-area {
+            height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
     <body>
-        <div id="starting-bar">
-            <span>My Game</span>
+        <div id="content">
+            <div id="starting-bar">
+                <span>My Game</span>
+            </div>
+            <div id="game-area">
+                <img id="car-location"
+                    style="height: 100px; width: 100px;" 
+                    src="./assets/pexels-mike-bird-112460-fotor-bg-remover-20240406224329.png">
+            </div>
         </div>
+        <script>
+            let car = { 
+                "speed": 1, 
+                "running": false,
+                "position": {
+                    "x":0,
+                    "y":0
+                },
+                "direction": "N"
+            }
+            let carParDiv = document.getElementById("game-area");
+            let intervalID;
+            moveCarToOrigin();
+
+            window.addEventListener(
+                "keydown",
+                (event) => {
+                    //console.log(event.key);
+                    //console.log(event.repeat);
+                    switch (event.key) {
+                        case " ":
+                            //console.log(`car state ${car.running}`);
+                            if (car.running) {
+                                stopCar();
+                            } else {
+                                startCar();
+                            }
+                            car.running = !car.running;
+                            break;
+                        case "ArrowLeft":
+                            //console.log("Turn Left");
+                            car.direction = "W";
+                            break;
+                        case "ArrowRight":
+                            //console.log("Turn Right");
+                            car.direction = "E";
+                            break;
+                        case "ArrowDown":
+                            //console.log("brake");
+                            car.direction = "S";
+                            break;
+                        case "ArrowUp":
+                            //console.log("move forward");
+                            car.direction = "N";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            )
+            function moveCarToOrigin() {
+                let carDiv = document.getElementById("car-location");
+                height = carParDiv.clientHeight;
+                width = carParDiv.clientWidth;
+                carDiv.style.marginLeft = (width - carDiv.clientWidth)/2;
+                carDiv.style.marginRight = (width - carDiv.clientWidth)/2;
+                carDiv.style.marginTop = (height - carDiv.clientHeight)/2;
+                carDiv.style.marginBottom = (height -carDiv.clientHeight)/2;
+            }
+            function startCar() {
+                if (!intervalID)
+                    intervalID = setInterval(moveCarAhead, 50);
+            }
+            function moveCarAhead() {
+                let carDiv = document.getElementById("car-location");
+                height = carParDiv.clientHeight;
+                width = carParDiv.clientWidth;
+                switch (car.direction) {
+                    case "N":
+                        car.position.y += 5;
+                        break;
+                    case "S":
+                        car.position.y -= 5;
+                        break;
+                    case "E":
+                        car.position.x += 5;
+                        break;
+                    case "W":
+                        car.position.x -= 5;
+                        break;
+                    default:
+                        break;
+
+                }
+                carDiv.style.marginTop = (height - carDiv.clientHeight)/2 - car.position.y;
+                carDiv.style.marginBottom = (height - carDiv.clientHeight)/2 + car.position.y;
+                carDiv.style.marginRight = (width - carDiv.clientWidth)/2 - car.position.x;
+                carDiv.style.marginLeft = (width - carDiv.clientWidth)/2 + car.position.x;
+            }
+            function stopCar() {
+                clearInterval(intervalID);
+                intervalID = null;
+            }
+        </script>
     </body>
 </html>
