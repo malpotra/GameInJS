@@ -112,10 +112,25 @@
                         break;
 
                 }
-                carDiv.style.marginTop = (height - carDiv.clientHeight)/2 - car.position.y;
-                carDiv.style.marginBottom = (height - carDiv.clientHeight)/2 + car.position.y;
-                carDiv.style.marginRight = (width - carDiv.clientWidth)/2 - car.position.x;
-                carDiv.style.marginLeft = (width - carDiv.clientWidth)/2 + car.position.x;
+                if ((height-carDiv.clientHeight)/2 <= Math.abs(car.position.y)) {
+                    if (car.direction == "N") {
+                        car.direction = "S";
+                    } else {
+                        car.direction = "N";
+                    }
+                } else if ((width - carDiv.clientWidth)/2 <= Math.abs(car.position.x)) {
+                    if (car.direction == "W") {
+                        car.direction = "E";
+                    } else {
+                        car.direction = "W";
+                    }
+                } else {
+                    carDiv.style.marginTop = (height - carDiv.clientHeight)/2 - car.position.y;
+                    carDiv.style.marginBottom = (height - carDiv.clientHeight)/2 + car.position.y;
+                    carDiv.style.marginRight = (width - carDiv.clientWidth)/2 - car.position.x;
+                    carDiv.style.marginLeft = (width - carDiv.clientWidth)/2 + car.position.x;
+                }
+
             }
             function stopCar() {
                 clearInterval(intervalID);
