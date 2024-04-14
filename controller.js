@@ -136,6 +136,13 @@ function gameSelected(event) {
     }
 }
 function goBackToFirstPage() {
+    console.log("go back to first page");
+    if (currentGame === "car") {
+        carGame.stopCar();
+        carGame.stopCarGame();
+    } else {
+        fruitGame.stopGame();
+    }
     isGameChosen = false;
     carGame = null;
     fruitGame = null;

@@ -15,9 +15,8 @@ class CarGame {
             "direction": "N"
         }
         this.intervalID = null;
-        this.docRef = docRef;
-        this.windowRef = windowRef;
-        this.carParDiv = this.docRef.getElementById(gameAreaDivID);
+        this.gameAreaDivID = gameAreaDivID;
+        this.keypressHandler = null;
     }
 
     /**
@@ -25,54 +24,54 @@ class CarGame {
      * 
      */
     startCarGame() {
-        this.windowRef.addEventListener(
+        this.keypressHandler = this.handleUserChanges.bind(this);
+        window.addEventListener(
             "keydown",
-            (event) => {
-                //console.log(event.key);
-                //console.log(event.repeat);
-                switch (event.key) {
-                    case " ":
-                        //console.log(`car state ${car.running}`);
-                        if (this.car.running) {
-                            this.stopCar();
-                        } else {
-                            this.startCar();
-                        }
-                        this.car.running = !this.car.running;
-                        break;
-                    case "ArrowLeft":
-                        //console.log("Turn Left");
-                        this.car.direction = "W";
-                        break;
-                    case "ArrowRight":
-                        //console.log("Turn Right");
-                        this.car.direction = "E";
-                        break;
-                    case "ArrowDown":
-                        //console.log("brake");
-                        this.car.direction = "S";
-                        break;
-                    case "ArrowUp":
-                        //console.log("move forward");
-                        this.car.direction = "N";
-                        break;
-                    default:
-                        break;
-                }
-            }
+            this.keypressHandler
         );
         this.moveCarToOrigin();
+    }
+    handleUserChanges(event) {
+        //console.log(event.key);
+        //console.log(event.repeat);
+        switch (event.key) {
+            case " ":
+                //console.log(`car state ${car.running}`);
+                if (this.car.running) {
+                    this.stopCar();
+                } else {
+                    this.startCar();
+                }
+                break;
+            case "ArrowLeft":
+                //console.log("Turn Left");
+                this.car.direction = "W";
+                break;
+            case "ArrowRight":
+                //console.log("Turn Right");
+                this.car.direction = "E";
+                break;
+            case "ArrowDown":
+                //console.log("brake");
+                this.car.direction = "S";
+                break;
+            case "ArrowUp":
+                //console.log("move forward");
+                this.car.direction = "N";
+                break;
+            default:
+                break;
+        }
     }
     /**
      * must be called to remove the controls for car game when game is changed
      * 
      */
     stopCarGame() {
-        this.windowRef.removeEventListener(
+        this.stopCar();
+        window.removeEventListener(
             "keydown",
-            (event) => {
-                console.log("Stopping Car Game");
-            }
+            this.keypressHandler
         );
     }
 
@@ -80,7 +79,8 @@ class CarGame {
      * Upon pressing spacebar the car will start moving
      */
     startCar() {
-        if (!this.intervalID) {
+        this.car.running = true;
+        if (this.intervalID === null) {
             this.intervalID = setInterval(this.moveCarAhead.bind(this), 50);
         }
     }
@@ -88,17 +88,24 @@ class CarGame {
      * Upon pressing spacebar the car will stop moving
      */
     stopCar() {
-        clearInterval(this.intervalID);
-        this.intervalID = null;
+        this.car.running = false;
+        if (this.intervalID !== null) {
+            if (clearInterval(this.intervalID) === undefined) {
+
+                console.log("Cleared The interval!!");
+                console.log(this);
+            }
+            this.intervalID = null;
+        }
     }
     
     /**
      * method responsible for moving and controlling the car
      */
     moveCarAhead() {
-        let carDiv = this.docRef.getElementById("car-location");
-        let height = this.carParDiv.clientHeight;
-        let width = this.carParDiv.clientWidth;
+        let carDiv = document.getElementById("car-location");
+        let height = document.getElementById(this.gameAreaDivID).clientHeight;
+        let width = document.getElementById(this.gameAreaDivID).clientWidth;
         switch (this.car.direction) {
             case "N":
                 this.car.position.y += 5;
@@ -137,9 +144,9 @@ class CarGame {
     
     }
     moveCarToOrigin() {
-        let carDiv = this.docRef.getElementById("car-location");
-        let height = this.carParDiv.clientHeight;
-        let width = this.carParDiv.clientWidth;
+        let carDiv = document.getElementById("car-location");
+        let height = document.getElementById(this.gameAreaDivID).clientHeight;
+        let width = document.getElementById(this.gameAreaDivID).clientWidth;
         carDiv.style.marginLeft = (width - carDiv.clientWidth)/2;
         carDiv.style.marginRight = (width - carDiv.clientWidth)/2;
         carDiv.style.marginTop = (height - carDiv.clientHeight)/2;
