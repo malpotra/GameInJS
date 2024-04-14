@@ -7,9 +7,20 @@
         <!-- Replace with relative path before moving to master `./controller.js` -->
         <!-- For development access with this endpoint `http://localhost:9999/controller.js`-->
         <!-- Make sure a tomcat instance is running and the module is there for static content access-->
-        <script type="module" src="./controller.js"></script>
+        <script type="module" src="http://localhost:9999/controller.js"></script>
     </head>
     <style>
+        @font-face {
+            font-family: "Inter Reg";
+            src: url("./assets/fonts/static/Inter-Regular.ttf");
+        }
+        @font-face {
+            font-family: "Inter Bold";
+            src: url("./assets/fonts/static/Inter-Bold.ttf");
+        }
+        html * {
+            font-family: "Inter Reg" !important;
+        }
         html, body {
             margin:0;
             padding:0;
