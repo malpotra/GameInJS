@@ -40,6 +40,7 @@ class FruitGame {
         this.asyncIntervalID = null;
         this.scorePopupIntervalID = null;
         this.handlerEvent = null;
+        this.pastScores = [];
     }
     /**
      * Add the required event listeners and methods running asycnhronously
@@ -226,9 +227,30 @@ class FruitGame {
         );
         scoreForLastRound.appendChild(
             this.docRef.createTextNode(
-                `The score for the last round was: ${this.currentScore}`
+                `The score for the last round was: ${this.currentScore}.`
             )
         );
+        this.pastScores.push(this.currentScore);
+        this.pastScores = this.pastScores.sort((a,b) => b - a);
+        let listElement = this.docRef.createElement("ol");
+        listElement.setAttribute("type", 1);
+        for (let i = 0 ; i<Math.min(this.pastScores.length, 5);i++) {
+            let listItem = this.docRef.createElement("li");
+            listItem.appendChild(this.docRef.createTextNode(`${this.pastScores[i]}`));
+            listElement.appendChild(listItem);
+        }
+        if (this.currentScore === this.pastScores[0]) {
+            scoreForLastRound.appendChild(
+                this.docRef.createTextNode(
+                    " Woo hoo!! New high score :)"
+                )
+            );
+        }
+        let txtEl = this.docRef.createElement("div");
+        txtEl.appendChild(this.docRef.createTextNode("Top Scores"));
+
+        scoreForLastRound.appendChild(txtEl);
+        scoreForLastRound.appendChild(listElement);
         this.docRef.getElementById("game-area").appendChild(scoreForLastRound);
         this.currentScore = 0;
 
